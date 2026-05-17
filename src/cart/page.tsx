@@ -1,5 +1,4 @@
-import { createElement } from '@incremental-code/last-act';
-import { Signal } from 'signal-polyfill';
+import { createElement, computed } from '@incremental-code/last-act';
 import type { PageProps } from '@incremental-code/last-router/server';
 import {
     Container,
@@ -11,6 +10,7 @@ import {
     Badge,
     Price,
     Button,
+    Show,
     tokens,
 } from '@incremental-code/last-ui';
 import { Nav } from '../lib/Nav.js';
@@ -33,7 +33,7 @@ export default function Cart({ router, body }: PageProps<{}, CartBody>) {
     const total = cartTotalComputed();
     const stocks = body.stocks;
 
-    const content = new Signal.Computed(() => {
+    const content = computed(() => {
         const lines = items.get();
         if (lines.length === 0) {
             return <Card>
@@ -49,16 +49,16 @@ export default function Cart({ router, body }: PageProps<{}, CartBody>) {
         </Stack>;
     });
 
-    const summary = new Signal.Computed(() => {
-        const cents = total.get();
-        if (cents === 0) return null;
-        return <Card>
-            <Row justify="space-between" align="center">
-                <Heading level={3}>Total</Heading>
-                <Price cents={cents} size="lg" />
-            </Row>
-        </Card>;
-    });
+    const summary = (
+        <Show when={total}>
+            {cents => <Card>
+                <Row justify="space-between" align="center">
+                    <Heading level={3}>Total</Heading>
+                    <Price cents={cents} size="lg" />
+                </Row>
+            </Card>}
+        </Show>
+    );
 
     return <Container>
         <Stack gap="xl">
@@ -78,7 +78,7 @@ interface CartRowProps {
 function CartRow({ line, stocks }: CartRowProps) {
     const { product, quantity } = line;
 
-    const stockBadge = new Signal.Computed(() => {
+    const stockBadge = computed(() => {
         const n = stocks.get()[product.id] ?? 0;
         if (n === 0) return <Badge variant="danger">Out of stock</Badge>;
         if (n < quantity) return <Badge variant="danger">Only {String(n)} left</Badge>;

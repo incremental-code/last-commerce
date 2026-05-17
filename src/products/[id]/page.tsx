@@ -1,5 +1,4 @@
-import { createElement } from '@incremental-code/last-act';
-import { Signal } from 'signal-polyfill';
+import { createElement, computed } from '@incremental-code/last-act';
 import type { PageProps } from '@incremental-code/last-router/server';
 import {
     Container,
@@ -11,6 +10,7 @@ import {
     Badge,
     Price,
     Button,
+    Show,
     tokens,
 } from '@incremental-code/last-ui';
 import { Nav } from '../../lib/Nav.js';
@@ -35,7 +35,7 @@ export default function ProductDetail({ router, body }: PageProps<{ id: string }
         </Container>;
     }
 
-    const stockBadge = new Signal.Computed(() => {
+    const stockBadge = computed(() => {
         const n = body.stock.get();
         if (n === 0) return <Badge variant="danger">Out of stock</Badge>;
         if (n <= 3) return <Badge variant="danger">Only {String(n)} left</Badge>;
@@ -43,12 +43,11 @@ export default function ProductDetail({ router, body }: PageProps<{ id: string }
         return <Badge>{String(n)} in stock</Badge>;
     });
 
-    const addDisabled = new Signal.Computed(() => body.stock.get() === 0);
-    const addButton = new Signal.Computed(() => (
-        <Button onClick={() => addToCart(product)} disabled={addDisabled.get()}>
-            {body.stock.get() === 0 ? 'Sold out' : 'Add to cart'}
-        </Button>
-    ));
+    const addButton = (
+        <Show when={body.stock} fallback={<Button disabled>Sold out</Button>}>
+            <Button onClick={() => addToCart(product)}>Add to cart</Button>
+        </Show>
+    );
 
     return <Container>
         <Stack gap="xl">
