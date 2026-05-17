@@ -56,10 +56,13 @@ export default function Cart({ router, body }: PageProps<{}, CartBody>) {
     const summary = (
         <Show when={total}>
             {cents => <Card>
-                <Row justify="space-between" align="center">
-                    <Heading level={3}>Total</Heading>
-                    <Price cents={cents} size="lg" />
-                </Row>
+                <Stack gap="md">
+                    <Row justify="space-between" align="center">
+                        <Heading level={3}>Total</Heading>
+                        <Price cents={cents} size="lg" />
+                    </Row>
+                    <Button onClick={() => router.push('/checkout')}>Proceed to checkout</Button>
+                </Stack>
             </Card>}
         </Show>
     );

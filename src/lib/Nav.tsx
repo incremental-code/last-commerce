@@ -34,6 +34,7 @@ export function Nav({ router, user }: NavProps) {
             <Row gap="sm" align="center">
                 <NavLink href="/cart" active={router.path === '/cart'}>Cart</NavLink>
                 <Badge variant="accent">{count}</Badge>
+                <NavLink href="/checkout" active={router.path === '/checkout'}>Checkout</NavLink>
                 {user
                     ? <AccountMenu user={user} />
                     : <a href="/signin" attributes={{
@@ -68,6 +69,11 @@ function AccountMenu({ user }: { user: PublicUser }) {
                 id: 'email',
                 label: user.email,
                 disabled: true,
+            },
+            {
+                id: 'addresses',
+                label: 'Addresses',
+                onSelect: () => { window.location.href = '/account/addresses'; },
             },
             {
                 id: 'signout',
