@@ -132,7 +132,10 @@ function SuccessCard({ orderId, lines, subtotalCents, shippingCents, totalCents,
                 shippingCents={shippingCents}
                 totalCents={totalCents}
             />
-            <Button onClick={() => router.push('/')}>Back to shop</Button>
+            <Row gap="sm">
+                <Button onClick={() => router.push('/orders/' + orderId)}>View order</Button>
+                <Button variant="secondary" onClick={() => router.push('/')}>Back to shop</Button>
+            </Row>
         </Stack>
     </Card>;
 }

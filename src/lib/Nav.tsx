@@ -76,6 +76,11 @@ function AccountMenu({ user }: { user: PublicUser }) {
                 onSelect: () => { window.location.href = '/account/addresses'; },
             },
             {
+                id: 'orders',
+                label: 'Orders',
+                onSelect: () => { window.location.href = '/orders'; },
+            },
+            {
                 id: 'signout',
                 label: 'Sign out',
                 onSelect: () => {
