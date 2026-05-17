@@ -8,6 +8,7 @@ import {
     Heading,
     Text,
     Card,
+    Badge,
     Price,
     Button,
     tokens,
@@ -21,9 +22,16 @@ import {
 } from '../lib/cart-store.js';
 import type { CartLine } from '../lib/cart-store.js';
 
-export default function Cart({ router }: PageProps) {
+interface CartBody {
+    items: CartLine[];
+    totalCents: number;
+    stocks: Record<string, number>;
+}
+
+export default function Cart({ router, body }: PageProps<{}, CartBody>) {
     const items = cartSignal();
     const total = cartTotalComputed();
+    const stocks = body.stocks;
 
     const content = new Signal.Computed(() => {
         const lines = items.get();
@@ -37,7 +45,7 @@ export default function Cart({ router }: PageProps) {
         }
 
         return <Stack gap="md">
-            {lines.map(line => <CartRow line={line} />)}
+            {lines.map(line => <CartRow line={line} stocks={stocks} />)}
         </Stack>;
     });
 
@@ -62,8 +70,22 @@ export default function Cart({ router }: PageProps) {
     </Container>;
 }
 
-function CartRow({ line }: { line: CartLine }) {
+interface CartRowProps {
+    line: CartLine;
+    stocks: { get(): Record<string, number> };
+}
+
+function CartRow({ line, stocks }: CartRowProps) {
     const { product, quantity } = line;
+
+    const stockBadge = new Signal.Computed(() => {
+        const n = stocks.get()[product.id] ?? 0;
+        if (n === 0) return <Badge variant="danger">Out of stock</Badge>;
+        if (n < quantity) return <Badge variant="danger">Only {String(n)} left</Badge>;
+        if (n <= 5) return <Badge variant="accent">{String(n)} in stock</Badge>;
+        return <Badge>{String(n)} in stock</Badge>;
+    });
+
     return <Card>
         <Row justify="space-between" align="center">
             <Row gap="md" align="center">
@@ -72,7 +94,10 @@ function CartRow({ line }: { line: CartLine }) {
                 }}>{product.emoji}</div>
                 <Stack gap="xs">
                     <Heading level={3}>{product.name}</Heading>
-                    <Price cents={product.priceCents} size="sm" />
+                    <Row gap="sm" align="center">
+                        <Price cents={product.priceCents} size="sm" />
+                        {stockBadge}
+                    </Row>
                 </Stack>
             </Row>
             <Row gap="sm" align="center">

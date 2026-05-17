@@ -1,4 +1,5 @@
 import { createElement } from '@incremental-code/last-act';
+import { Signal } from 'signal-polyfill';
 import type { PageProps } from '@incremental-code/last-router/server';
 import {
     Container,
@@ -7,6 +8,7 @@ import {
     Heading,
     Text,
     Card,
+    Badge,
     Price,
     Button,
     tokens,
@@ -18,6 +20,7 @@ import { read } from '../../lib/body.js';
 
 interface DetailBody {
     product: Product | null;
+    stock: number;
 }
 
 export default function ProductDetail({ router, body }: PageProps<{ id: string }, DetailBody>) {
@@ -32,6 +35,21 @@ export default function ProductDetail({ router, body }: PageProps<{ id: string }
         </Container>;
     }
 
+    const stockBadge = new Signal.Computed(() => {
+        const n = body.stock.get();
+        if (n === 0) return <Badge variant="danger">Out of stock</Badge>;
+        if (n <= 3) return <Badge variant="danger">Only {String(n)} left</Badge>;
+        if (n <= 10) return <Badge variant="accent">{String(n)} in stock</Badge>;
+        return <Badge>{String(n)} in stock</Badge>;
+    });
+
+    const addDisabled = new Signal.Computed(() => body.stock.get() === 0);
+    const addButton = new Signal.Computed(() => (
+        <Button onClick={() => addToCart(product)} disabled={addDisabled.get()}>
+            {body.stock.get() === 0 ? 'Sold out' : 'Add to cart'}
+        </Button>
+    ));
+
     return <Container>
         <Stack gap="xl">
             <Nav router={router} />
@@ -44,11 +62,14 @@ export default function ProductDetail({ router, body }: PageProps<{ id: string }
                 <Stack gap="lg">
                     <Stack gap="sm">
                         <Heading level={1}>{product.name}</Heading>
-                        <Price cents={product.priceCents} size="lg" />
+                        <Row gap="sm" align="center">
+                            <Price cents={product.priceCents} size="lg" />
+                            {stockBadge}
+                        </Row>
                     </Stack>
                     <Text>{product.description}</Text>
                     <Row gap="sm">
-                        <Button onClick={() => addToCart(product)}>Add to cart</Button>
+                        {addButton}
                         <Button variant="secondary" onClick={() => router.push('/')}>Back</Button>
                     </Row>
                     <Text muted size="sm">
