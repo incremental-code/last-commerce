@@ -12,6 +12,7 @@
     "@incremental-code/last-act": "file:../last-act",
     "@incremental-code/last-router": "file:../last-router",
     "@incremental-code/last-ui": "file:../last-ui",
+    "@floating-ui/dom": "^1.6.0",
     "signal-polyfill": "^0.2.2"
   },
   "devDependencies": {
