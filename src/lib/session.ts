@@ -54,6 +54,23 @@ export function createSession(res: ApiResponse, userId: string): Session {
     return session;
 }
 
+/**
+ * Public-safe projection of the current user (id + email only). Returns null
+ * when there's no session. Use this whenever you're putting the user into an
+ * api body — never return the full `User` to clients (it contains the salt
+ * and password hash).
+ */
+export interface PublicUser {
+    id: string;
+    email: string;
+}
+
+export function readPublicUser(req: ApiRequest): PublicUser | null {
+    const found = readSession(req);
+    if (!found) return null;
+    return { id: found.user.id, email: found.user.email };
+}
+
 /** Destroys the current session (if any) and clears the cookie. */
 export function destroySession(req: ApiRequest, res: ApiResponse): void {
     const sid = req.cookies[SESSION_COOKIE];

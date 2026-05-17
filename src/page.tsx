@@ -13,18 +13,21 @@ import {
 } from '@incremental-code/last-ui';
 import { Nav } from './lib/Nav.js';
 import type { Product } from './lib/catalog.js';
+import type { PublicUser } from './lib/session.js';
 import { addToCart } from './lib/cart-store.js';
 import { read } from './lib/body.js';
 
 interface HomeBody {
     products: Product[];
+    user: PublicUser | null;
 }
 
 export default function Home({ router, body }: PageProps<{}, HomeBody>) {
     const products = read(body.products);
+    const user = read(body.user);
     return <Container>
         <Stack gap="xl">
-            <Nav router={router} />
+            <Nav router={router} user={user} />
             <Stack gap="sm">
                 <Heading level={1}>Goods for the desk</Heading>
                 <Text muted>A tiny storefront built on last-server, last-ui, and a signal-backed cart.</Text>

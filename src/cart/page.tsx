@@ -21,17 +21,21 @@ import {
     cartTotalComputed,
 } from '../lib/cart-store.js';
 import type { CartLine } from '../lib/cart-store.js';
+import type { PublicUser } from '../lib/session.js';
+import { read } from '../lib/body.js';
 
 interface CartBody {
     items: CartLine[];
     totalCents: number;
     stocks: Record<string, number>;
+    user: PublicUser | null;
 }
 
 export default function Cart({ router, body }: PageProps<{}, CartBody>) {
     const items = cartSignal();
     const total = cartTotalComputed();
     const stocks = body.stocks;
+    const user = read(body.user);
 
     const content = computed(() => {
         const lines = items.get();
@@ -62,7 +66,7 @@ export default function Cart({ router, body }: PageProps<{}, CartBody>) {
 
     return <Container>
         <Stack gap="xl">
-            <Nav router={router} />
+            <Nav router={router} user={user} />
             <Heading level={1}>Your cart</Heading>
             {content}
             {summary}

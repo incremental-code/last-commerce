@@ -15,20 +15,23 @@ import {
 } from '@incremental-code/last-ui';
 import { Nav } from '../../lib/Nav.js';
 import type { Product } from '../../lib/catalog.js';
+import type { PublicUser } from '../../lib/session.js';
 import { addToCart } from '../../lib/cart-store.js';
 import { read } from '../../lib/body.js';
 
 interface DetailBody {
     product: Product | null;
     stock: number;
+    user: PublicUser | null;
 }
 
 export default function ProductDetail({ router, body }: PageProps<{ id: string }, DetailBody>) {
     const product = read(body.product);
+    const user = read(body.user);
     if (!product) {
         return <Container>
             <Stack gap="lg">
-                <Nav router={router} />
+                <Nav router={router} user={user} />
                 <Heading level={1}>Product not found</Heading>
                 <Button onClick={() => router.push('/')}>Back to shop</Button>
             </Stack>
@@ -51,7 +54,7 @@ export default function ProductDetail({ router, body }: PageProps<{ id: string }
 
     return <Container>
         <Stack gap="xl">
-            <Nav router={router} />
+            <Nav router={router} user={user} />
             <Row gap="xl" align="start">
                 <Card padding="48px">
                     <div attributes={{
