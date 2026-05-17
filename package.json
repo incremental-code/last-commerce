@@ -1,0 +1,21 @@
+{
+  "name": "last-commerce",
+  "version": "1.0.0",
+  "description": "Tiny e-commerce demo on last-server + last-ui.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "last-server src",
+    "build": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@incremental-code/last-act": "file:../last-act",
+    "@incremental-code/last-router": "file:../last-router",
+    "@incremental-code/last-ui": "file:../last-ui",
+    "signal-polyfill": "^0.2.2"
+  },
+  "devDependencies": {
+    "@incremental-code/last-server": "file:../last-server",
+    "typescript": "^5.6.3"
+  }
+}
