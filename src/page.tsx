@@ -14,12 +14,14 @@ import {
 import { Nav } from './lib/Nav.js';
 import type { Product } from './lib/catalog.js';
 import { addToCart } from './lib/cart-store.js';
+import { read } from './lib/body.js';
 
 interface HomeBody {
     products: Product[];
 }
 
 export default function Home({ router, body }: PageProps<{}, HomeBody>) {
+    const products = read(body.products);
     return <Container>
         <Stack gap="xl">
             <Nav router={router} />
@@ -28,7 +30,7 @@ export default function Home({ router, body }: PageProps<{}, HomeBody>) {
                 <Text muted>A tiny storefront built on last-server, last-ui, and a signal-backed cart.</Text>
             </Stack>
             <Grid minColumnWidth="240px" gap="lg">
-                {body.products.map(product => <ProductTile product={product} router={router} />)}
+                {products.map(product => <ProductTile product={product} router={router} />)}
             </Grid>
         </Stack>
     </Container>;

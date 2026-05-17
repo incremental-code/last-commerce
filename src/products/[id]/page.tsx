@@ -14,13 +14,15 @@ import {
 import { Nav } from '../../lib/Nav.js';
 import type { Product } from '../../lib/catalog.js';
 import { addToCart } from '../../lib/cart-store.js';
+import { read } from '../../lib/body.js';
 
 interface DetailBody {
     product: Product | null;
 }
 
 export default function ProductDetail({ router, body }: PageProps<{ id: string }, DetailBody>) {
-    if (!body.product) {
+    const product = read(body.product);
+    if (!product) {
         return <Container>
             <Stack gap="lg">
                 <Nav router={router} />
@@ -29,8 +31,6 @@ export default function ProductDetail({ router, body }: PageProps<{ id: string }
             </Stack>
         </Container>;
     }
-
-    const product = body.product;
 
     return <Container>
         <Stack gap="xl">
