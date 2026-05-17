@@ -11,6 +11,7 @@ import {
     Input,
     Field,
     Show,
+    Alert,
     useForm,
     required,
     email,
@@ -64,9 +65,7 @@ export default function SignUp({ body }: PageProps<{}, SignupBody>) {
                     <Stack gap="lg">
                         <Heading level={1}>Create an account</Heading>
                         <Show when={body.error}>
-                            {message => <div attributes={{
-                                style: `color: ${tokens.color.danger}; font-size: ${tokens.font.sm};`,
-                            }}>{message}</div>}
+                            {message => <Alert variant="error">{message}</Alert>}
                         </Show>
                         <Field label="Email" htmlFor="signup-email" required error={form.fields.email.error}>
                             <Input

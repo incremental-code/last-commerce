@@ -28,7 +28,10 @@ type Body = {
     user: PublicUser;
     addresses: Address[];
     error: string | null;
+    head: { title: string };
 };
+
+const HEAD = { title: 'Addresses · last-commerce' };
 
 /**
  * Address book — GET lists addresses, POST dispatches on `_action`
@@ -86,6 +89,7 @@ export default async function (
         user: publicUser,
         addresses: listAddressesForUser(user.id),
         error: null,
+        head: HEAD,
     };
 }
 
@@ -94,6 +98,7 @@ function errorBody(user: { id: string; email: string }, error: string): Body {
         user: { id: user.id, email: user.email },
         addresses: listAddressesForUser(user.id),
         error,
+        head: HEAD,
     };
 }
 

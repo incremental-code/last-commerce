@@ -4,6 +4,16 @@ import { products } from './lib/catalog.js';
 import type { Product } from './lib/catalog.js';
 import { readPublicUser, type PublicUser } from './lib/session.js';
 
-export default function (req: ApiRequest): { products: Product[]; user: PublicUser | null } {
-    return { products, user: readPublicUser(req) };
+type Body = {
+    products: Product[];
+    user: PublicUser | null;
+    head: { title: string };
+};
+
+export default function (req: ApiRequest): Body {
+    return {
+        products,
+        user: readPublicUser(req),
+        head: { title: 'Shop · last-commerce' },
+    };
 }

@@ -14,6 +14,7 @@ import {
     NumberInput,
     Show,
     Price,
+    Alert,
     useForm,
     required,
     custom,
@@ -235,11 +236,7 @@ function CheckoutForm({
             <input attributes={{ type: 'hidden', name: '_action', value: 'place' }} />
 
             {serverError
-                ? <Card>
-                    <div attributes={{
-                        style: `color: ${tokens.color.danger}; font-size: ${tokens.font.sm};`,
-                    }}>{serverError}</div>
-                </Card>
+                ? <Alert variant="error">{serverError}</Alert>
                 : null}
 
             <ContactSection user={user} />

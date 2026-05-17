@@ -24,6 +24,7 @@ interface Body {
     page: number;
     pageSize: number;
     sort: { columnId: string; direction: 'asc' | 'desc' };
+    head: { title: string };
 }
 
 const PAGE_SIZE = 10;
@@ -59,6 +60,7 @@ export default async function (
         page,
         pageSize: PAGE_SIZE,
         sort,
+        head: { title: 'Orders · last-commerce' },
     };
 }
 

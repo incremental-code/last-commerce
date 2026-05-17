@@ -5,7 +5,9 @@ import { createSession } from '../lib/session.js';
 
 type Query = { next?: string };
 type In = { email?: string; password?: string };
-type Body = { error: string | null };
+type Body = { error: string | null; head: { title: string } };
+
+const HEAD = { title: 'Sign in · last-commerce' };
 
 /**
  * GET returns `{ error: null }` so the page always sees an `error` signal
@@ -20,25 +22,25 @@ export default async function (
     res: ApiResponse,
 ): Promise<Body> {
     if (req.method !== 'POST') {
-        return { error: null };
+        return { error: null, head: HEAD };
     }
 
     const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
     const password = typeof req.body?.password === 'string' ? req.body.password : '';
 
     if (!email || !password) {
-        return { error: 'Invalid email or password' };
+        return { error: 'Invalid email or password', head: HEAD };
     }
 
     const userId = usersByEmail.get(email);
     const user = userId ? users.get(userId) : undefined;
     if (!user) {
-        return { error: 'Invalid email or password' };
+        return { error: 'Invalid email or password', head: HEAD };
     }
 
     const hashed = hashPassword(password, user.passwordSalt);
     if (hashed !== user.passwordHash) {
-        return { error: 'Invalid email or password' };
+        return { error: 'Invalid email or password', head: HEAD };
     }
 
     createSession(res, user.id);

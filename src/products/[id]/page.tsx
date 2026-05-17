@@ -11,6 +11,7 @@ import {
     Price,
     Button,
     Show,
+    toast,
     tokens,
 } from '@incremental-code/last-ui';
 import { Nav } from '../../lib/Nav.js';
@@ -48,7 +49,10 @@ export default function ProductDetail({ router, body }: PageProps<{ id: string }
 
     const addButton = (
         <Show when={body.stock} fallback={<Button disabled>Sold out</Button>}>
-            <Button onClick={() => addToCart(product)}>Add to cart</Button>
+            <Button onClick={() => {
+                addToCart(product);
+                toast.success(`Added "${product.name}" to cart`);
+            }}>Add to cart</Button>
         </Show>
     );
 

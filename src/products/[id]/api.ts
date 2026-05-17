@@ -9,6 +9,7 @@ type Body = {
     product: Product | null;
     stock: number;
     user: PublicUser | null;
+    head: { title: string };
 };
 
 export default async function* (req: ApiRequest<Params>): AsyncGenerator<Partial<Body>> {
@@ -20,7 +21,8 @@ export default async function* (req: ApiRequest<Params>): AsyncGenerator<Partial
     for await (const stocks of streamStocks()) {
         const stock = stocks[req.params.id] ?? 0;
         if (first) {
-            yield { product, stock, user };
+            const title = product ? `${product.name} · last-commerce` : 'Product · last-commerce';
+            yield { product, stock, user, head: { title } };
             first = false;
             last = stock;
         } else if (stock !== last) {

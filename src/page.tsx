@@ -9,6 +9,7 @@ import {
     Text,
     Price,
     Button,
+    toast,
     tokens,
 } from '@incremental-code/last-ui';
 import { Nav } from './lib/Nav.js';
@@ -54,7 +55,10 @@ function ProductTile({ product, router }: { product: Product; router: { push(p: 
                 <Button variant="secondary" onClick={() => router.push('/products/' + product.id)}>
                     View details
                 </Button>
-                <Button onClick={() => addToCart(product)}>Add to cart</Button>
+                <Button onClick={() => {
+                    addToCart(product);
+                    toast.success(`Added "${product.name}" to cart`);
+                }}>Add to cart</Button>
             </Stack>
         </Stack>
     </Card>;

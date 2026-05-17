@@ -10,6 +10,7 @@ import {
     Input,
     Field,
     Show,
+    Alert,
     useForm,
     required,
     email,
@@ -56,9 +57,7 @@ export default function SignIn({ body }: PageProps<{}, SigninBody>) {
                     <Stack gap="lg">
                         <Heading level={1}>Sign in</Heading>
                         <Show when={body.error}>
-                            {message => <div attributes={{
-                                style: `color: ${tokens.color.danger}; font-size: ${tokens.font.sm};`,
-                            }}>{message}</div>}
+                            {message => <Alert variant="error">{message}</Alert>}
                         </Show>
                         <Field label="Email" htmlFor="signin-email" required error={form.fields.email.error}>
                             <Input

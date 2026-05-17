@@ -11,10 +11,10 @@ import {
     Input,
     Field,
     Show,
+    Alert,
     useForm,
     required,
     maxLength,
-    tokens,
 } from '@incremental-code/last-ui';
 import { Nav } from '../../lib/Nav.js';
 import { read } from '../../lib/body.js';
@@ -97,13 +97,7 @@ export default function AddressesPage({ router, body }: PageProps<{}, AddressesB
 
     const errorBanner = (
         <Show when={body.error}>
-            {message => <Card>
-                <Text>
-                    <span attributes={{
-                        style: `color: ${tokens.color.danger}; font-size: ${tokens.font.sm};`,
-                    }}>{message}</span>
-                </Text>
-            </Card>}
+            {message => <Alert variant="error">{message}</Alert>}
         </Show>
     );
 

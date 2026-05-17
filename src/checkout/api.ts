@@ -42,6 +42,15 @@ interface Body {
     shippingFlatCents: number;
     error: string | null;
     placedOrderId: string | null;
+    head: { title: string };
+}
+
+function checkoutHead(placedOrderId: string | null): { title: string } {
+    return {
+        title: placedOrderId
+            ? 'Order placed · last-commerce'
+            : 'Checkout · last-commerce',
+    };
 }
 
 /** Build the GET-style body snapshot (used as base for POST responses too). */
@@ -60,6 +69,7 @@ function buildBody(user: PublicUser, error: string | null, placedOrderId: string
         shippingFlatCents: SHIPPING_FLAT_CENTS,
         error,
         placedOrderId,
+        head: checkoutHead(placedOrderId),
     };
 }
 
@@ -192,5 +202,6 @@ export default async function (
         shippingFlatCents: SHIPPING_FLAT_CENTS,
         error: null,
         placedOrderId: order.id,
+        head: checkoutHead(order.id),
     };
 }

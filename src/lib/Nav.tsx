@@ -6,6 +6,7 @@ import {
     Badge,
     Avatar,
     MenuDropdown,
+    ToastRoot,
     tokens,
 } from '@incremental-code/last-ui';
 import { cartCountComputed } from './cart-store.js';
@@ -57,6 +58,7 @@ export function Nav({ router, user }: NavProps) {
                 }}
             />
             : null}
+        <ToastRoot />
     </div>;
 }
 

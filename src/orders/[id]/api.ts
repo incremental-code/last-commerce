@@ -9,6 +9,7 @@ interface Body {
     user: PublicUser;
     order: Order | null;
     address: Address | null;
+    head: { title: string };
 }
 
 /**
@@ -30,9 +31,19 @@ export default async function (
 
     const order = getOrder(req.params.id);
     if (!order || order.userId !== user.id) {
-        return { user: publicUser, order: null, address: null };
+        return {
+            user: publicUser,
+            order: null,
+            address: null,
+            head: { title: 'Order not found · last-commerce' },
+        };
     }
 
     const address = getAddress(order.shippingAddressId) ?? null;
-    return { user: publicUser, order, address };
+    return {
+        user: publicUser,
+        order,
+        address,
+        head: { title: `Order ${order.id} · last-commerce` },
+    };
 }

@@ -11,7 +11,9 @@ import {
 import { createSession } from '../lib/session.js';
 
 type In = { email?: string; password?: string; confirmPassword?: string };
-type Body = { error: string | null };
+type Body = { error: string | null; head: { title: string } };
+
+const HEAD = { title: 'Sign up · last-commerce' };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -20,7 +22,7 @@ export default async function (
     res: ApiResponse,
 ): Promise<Body> {
     if (req.method !== 'POST') {
-        return { error: null };
+        return { error: null, head: HEAD };
     }
 
     const rawEmail = typeof req.body?.email === 'string' ? req.body.email.trim() : '';
@@ -29,16 +31,16 @@ export default async function (
     const confirm = typeof req.body?.confirmPassword === 'string' ? req.body.confirmPassword : '';
 
     if (!email || !EMAIL_RE.test(email)) {
-        return { error: 'Enter a valid email address' };
+        return { error: 'Enter a valid email address', head: HEAD };
     }
     if (password.length < 6) {
-        return { error: 'Password must be at least 6 characters' };
+        return { error: 'Password must be at least 6 characters', head: HEAD };
     }
     if (password !== confirm) {
-        return { error: 'Passwords do not match' };
+        return { error: 'Passwords do not match', head: HEAD };
     }
     if (usersByEmail.has(email)) {
-        return { error: 'An account with that email already exists' };
+        return { error: 'An account with that email already exists', head: HEAD };
     }
 
     const salt = newSalt();

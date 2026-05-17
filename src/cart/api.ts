@@ -9,6 +9,7 @@ type Body = {
     totalCents: number;
     stocks: Record<string, number>;
     user: PublicUser | null;
+    head: { title: string };
 };
 
 export default async function* (req: ApiRequest): AsyncGenerator<Partial<Body>> {
@@ -16,7 +17,13 @@ export default async function* (req: ApiRequest): AsyncGenerator<Partial<Body>> 
     let first = true;
     for await (const stocks of streamStocks()) {
         if (first) {
-            yield { items: getCart(), totalCents: cartTotalCents(), stocks, user };
+            yield {
+                items: getCart(),
+                totalCents: cartTotalCents(),
+                stocks,
+                user,
+                head: { title: 'Cart · last-commerce' },
+            };
             first = false;
         } else {
             yield { stocks };
